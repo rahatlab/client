@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { HeartHandshake, Mail, MapPin } from "lucide-react";
+import { PlantPot, Mail, MapPin } from "lucide-react";
 
 const COLUMNS = [
   {
@@ -28,7 +28,7 @@ export function Footer() {
         <div className="space-y-3">
           <div className="flex items-center gap-2">
             <span className="flex size-9 items-center justify-center rounded-lg bg-primary text-primary-foreground">
-              <HeartHandshake className="size-5" aria-hidden />
+              <PlantPot className="size-5" aria-hidden />
             </span>
             <span className="font-heading text-lg font-bold">ShohoJog</span>
           </div>
@@ -51,7 +51,7 @@ export function Footer() {
               </svg>
             </a>
             <a
-              href="https://github.com"
+              href="https://github.com/rahatlab"
               aria-label="ShohoJog on GitHub"
               className="flex size-9 items-center justify-center rounded-md border bg-background transition-colors hover:bg-muted"
             >
@@ -63,7 +63,7 @@ export function Footer() {
               </svg>
             </a>
             <a
-              href="mailto:hello@shohojog.org"
+              href="mailto:contract.rahat@gmail.com"
               aria-label="Email ShohoJog"
               className="flex size-9 items-center justify-center rounded-md border bg-background transition-colors hover:bg-muted"
             >
@@ -99,12 +99,12 @@ export function Footer() {
           <ul className="mt-3 space-y-2 text-sm text-muted-foreground">
             <li className="flex gap-2">
               <MapPin className="mt-0.5 size-4 shrink-0" aria-hidden />
-              <span>Mirpur 10, Dhaka 1216, Bangladesh</span>
+              <span>Narsingdi, Dhaka 1216, Bangladesh</span>
             </li>
             <li className="flex gap-2">
               <Mail className="mt-0.5 size-4 shrink-0" aria-hidden />
-              <a href="mailto:hello@shohojog.org" className="hover:text-foreground">
-                hello@shohojog.org
+              <a href="mailto:contract.rahat@gmail.com" className="hover:text-foreground">
+                contract.rahat@gmail.com
               </a>
             </li>
           </ul>

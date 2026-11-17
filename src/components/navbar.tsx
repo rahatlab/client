@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { HeartHandshake, LogOut, Menu } from "lucide-react";
+import { PlantPot, LogOut, Menu } from "lucide-react";
 import { useState } from "react";
 import { useAuth } from "@/providers/auth-provider";
 import { ThemeToggle } from "@/components/theme-toggle";
@@ -55,7 +55,7 @@ export function Navbar() {
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-4 px-4 sm:px-6">
         <Link href="/" className="flex shrink-0 items-center gap-2">
           <span className="flex size-9 items-center justify-center rounded-lg bg-primary text-primary-foreground">
-            <HeartHandshake className="size-5" aria-hidden />
+            <PlantPot className="size-5" aria-hidden />
           </span>
           <span className="font-heading text-lg font-bold tracking-tight sm:text-xl">
             ShohoJog
