@@ -1,7 +1,7 @@
 # ShohoJog — Social Development Events Platform
 
-**Live site:** https://shohojog.vercel.app
-**API server:** https://shohojog-api.onrender.com
+**Live site:** https://event-switch.vercel.app
+**API server:** https://backend-cg3q.onrender.com
 
 ShohoJog is a community event platform where neighbours create, join and track
 social service events in their local area — winter clothes distribution, blanket
@@ -35,6 +35,46 @@ drives, blood donation, plantation and clean-ups.
 Next.js 16 (App Router) · TypeScript · Tailwind CSS v4 · shadcn/ui ·
 React Hook Form + Zod · better-auth client · TanStack-free custom hooks
 
+## Authentication Architecture (BetterAuth)
+
+### Files
+
+- `src/lib/auth-client.ts` — `createAuthClient` instance (baseURL, fetchOptions with credentials)
+- `src/app/login/page.tsx` — Email/password login + Google social sign-in handler
+- `src/app/register/register-form.tsx` — Registration form with password validation (upper + lower + 6 chars, toast on failure)
+- `src/providers/auth-provider.tsx` — Auth context provider (session boot, refresh, logout, patchUser)
+
+### How Google OAuth works
+
+1. User clicks "Sign in with Google" on the login page
+2. `authClient.signIn.social({ provider: "google", callbackURL: window.location.origin })` redirects to Google's OAuth consent page
+3. After the user consents, Google redirects to BetterAuth's callback route on the backend
+4. BetterAuth verifies the `state` parameter and sets a session cookie
+5. The user is redirected back to `callbackURL` (the frontend origin)
+6. The frontend calls `GET /api/auth/session` to exchange the BetterAuth session for our own JWT
+
+### Frontend auth client configuration
+
+`src/lib/auth-client.ts`:
+
+```ts
+export const authClient = createAuthClient({
+  baseURL: process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:5000",
+  fetchOptions: {
+    credentials: "include",
+  },
+});
+```
+
+- `baseURL` points to the backend API (Render URL in production)
+- `credentials: "include"` ensures the session cookie is sent cross-origin
+
+### Environment variables
+
+| Variable              | Description                              |
+| --------------------- | ---------------------------------------- |
+| `NEXT_PUBLIC_API_URL` | Base URL of the Express API (localhost:5000 in dev, Render URL in prod) |
+
 ## Getting started
 
 ```bash
@@ -43,14 +83,10 @@ npm install
 npm run dev                  # http://localhost:3000
 ```
 
-| Variable              | Description                              |
-| --------------------- | ---------------------------------------- |
-| `NEXT_PUBLIC_API_URL` | Base URL of the Express API (localhost:5000 in dev, Render URL in prod) |
-
 ## Deploy (Vercel)
 
 1. Import this folder as a project.
-2. Add `NEXT_PUBLIC_API_URL` pointing at the deployed backend.
+2. Add `NEXT_PUBLIC_API_URL` pointing at the deployed backend (`https://backend-cg3q.onrender.com`).
 3. Add `https://<your-app>.vercel.app` to the backend's `CLIENT_URL` list so
    CORS and the auth cookies are allowed.
 4. Deploy — no other build settings are required.
