@@ -102,6 +102,9 @@ export default function EventDetailsPage({
     joinedState.id === id &&
     joinedState.joined;
 
+  const isPastEvent =
+    event !== null && new Date(event.date).setHours(0, 0, 0, 0) < new Date().setHours(0, 0, 0, 0);
+
   const handleJoin = async () => {
     if (status !== "authenticated") {
       toast.info("Please sign in to join this event");
@@ -239,9 +242,17 @@ export default function EventDetailsPage({
           </p>
 
           <div className="flex flex-wrap gap-3 border-t pt-5">
-            <Button size="lg" onClick={handleJoin} disabled={busy || joined}>
+            <Button
+              size="lg"
+              onClick={handleJoin}
+              disabled={busy || joined || isPastEvent}
+            >
               {busy && <Loader2 className="mr-2 size-4 animate-spin" aria-hidden />}
-              {joined ? "You have joined" : "Join Event"}
+              {isPastEvent
+                ? "Past Event"
+                : joined
+                  ? "You have joined"
+                  : "Join Event"}
             </Button>
             {status !== "authenticated" && (
               <p className="self-center text-xs text-muted-foreground">

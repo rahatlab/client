@@ -54,31 +54,10 @@ const FEATURES = [
   },
 ] as const;
 
-const GALLERY = [
-  {
-    src: "https://images.unsplash.com/photo-1593113630400-ea4288922497?w=800&q=80",
-    alt: "Volunteers sorting donated clothes into boxes",
-    caption: "Winter clothes sorting, Mirpur",
-  },
-  {
-    src: "https://images.unsplash.com/photo-1469571486292-0ba58a3f068b?w=800&q=80",
-    alt: "Volunteers packing food parcels together",
-    caption: "Food parcel packing, Mohammadpur",
-  },
-  {
-    src: "https://images.unsplash.com/photo-1532629345422-7515f3d16bb6?w=800&q=80",
-    alt: "Hands joining together in a circle",
-    caption: "Volunteer meetup, Uttara",
-  },
-  {
-    src: "https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?w=800&q=80",
-    alt: "Group of volunteers standing together outdoors",
-    caption: "Clean-up crew, Banani",
-  },
-] as const;
-
 export default function HomePage() {
   const { events, loading, error } = useEvents("/api/events/recent");
+  const { events: pastEvents, loading: pastLoading, error: pastError } =
+    useEvents("/api/events/past");
 
   return (
     <>
@@ -234,7 +213,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ------------------------------------------------------- gallery */}
+      {/* ------------------------------------------------------- moments from field */}
       <section className="mx-auto max-w-7xl px-4 py-14 sm:px-6 sm:py-16">
         <div className="mx-auto max-w-2xl space-y-3 text-center">
           <h2 className="font-heading text-2xl font-bold tracking-tight sm:text-3xl">
@@ -245,24 +224,44 @@ export default function HomePage() {
           </p>
         </div>
 
-        <div className="mt-10 grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
-          {GALLERY.map((photo) => (
-            <figure
-              key={photo.src}
-              className="group relative aspect-square overflow-hidden rounded-xl bg-muted"
+        <div className="mt-10">
+          {pastLoading ? (
+            <EventGridSkeleton count={6} />
+          ) : pastError ? (
+            <div
+              role="alert"
+              className="rounded-lg border border-destructive/40 bg-destructive/10 p-4 text-sm text-destructive"
             >
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={photo.src}
-                alt={photo.alt}
-                loading="lazy"
-                className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
-              />
-              <figcaption className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/75 to-transparent p-3 text-xs text-white opacity-0 transition-opacity group-hover:opacity-100">
-                {photo.caption}
-              </figcaption>
-            </figure>
-          ))}
+              Could not load past events: {pastError}
+            </div>
+          ) : pastEvents.length === 0 ? (
+            <div className="rounded-lg border border-dashed p-12 text-center">
+              <p className="font-medium">No past events yet</p>
+              <p className="mt-1 text-sm text-muted-foreground">
+                Be the first to create one.
+              </p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
+              {pastEvents.map((event) => (
+                <figure
+                  key={event._id}
+                  className="group relative aspect-square overflow-hidden rounded-xl bg-muted"
+                >
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={event.thumbnail}
+                    alt={event.title}
+                    loading="lazy"
+                    className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                  />
+                  <figcaption className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/75 to-transparent p-3 text-xs text-white opacity-0 transition-opacity group-hover:opacity-100">
+                    {event.title}
+                  </figcaption>
+                </figure>
+              ))}
+            </div>
+          )}
         </div>
       </section>
 
