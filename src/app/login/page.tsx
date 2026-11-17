@@ -57,9 +57,13 @@ export default function LoginPage() {
   };
 
   const onGoogle = async () => {
+    // Use the full frontend origin as the OAuth callback so BetterAuth
+    // redirects back to the frontend (Vercel in prod, localhost in dev)
+    // instead of staying on the backend domain after Google login.
+    const callbackURL = `${window.location.origin}`;
     const { error } = await authClient.signIn.social({
       provider: "google",
-      callbackURL: "/",
+      callbackURL,
     });
     if (error) toast.error(googleErrorMessage(error));
   };
