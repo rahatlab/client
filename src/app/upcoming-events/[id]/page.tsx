@@ -19,6 +19,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { api } from "@/lib/api";
 import { useAuth } from "@/providers/auth-provider";
 import type { EventItem } from "@/lib/types";
+import { normalizeDate } from "@/lib/dates";
 
 interface EventDetail extends EventItem {
   participants: number;
@@ -32,7 +33,7 @@ interface EventLoadResult {
 
 function prettyDate(value: string): string {
   try {
-    return format(parseISO(value), "EEEE, MMMM d, yyyy");
+    return format(parseISO(normalizeDate(value)), "EEEE, MMMM d, yyyy");
   } catch {
     return value;
   }
@@ -103,7 +104,9 @@ export default function EventDetailsPage({
     joinedState.joined;
 
   const isPastEvent =
-    event !== null && new Date(event.date).setHours(0, 0, 0, 0) < new Date().setHours(0, 0, 0, 0);
+    event !== null &&
+    new Date(normalizeDate(event.date)).setHours(0, 0, 0, 0) <
+      new Date().setHours(0, 0, 0, 0);
 
   const handleJoin = async () => {
     if (status !== "authenticated") {

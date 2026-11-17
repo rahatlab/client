@@ -11,6 +11,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import type { EventItem } from "@/lib/types";
+import { normalizeDate } from "@/lib/dates";
 
 interface EventCardProps {
   event: EventItem;
@@ -20,7 +21,7 @@ interface EventCardProps {
 
 function prettyDate(value: string): string {
   try {
-    return format(parseISO(value), "EEEE, MMM d, yyyy");
+    return format(parseISO(normalizeDate(value)), "EEEE, MMM d, yyyy");
   } catch {
     return value;
   }
